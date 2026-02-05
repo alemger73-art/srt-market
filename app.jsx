@@ -43,6 +43,12 @@ const PRODUCTS_DEMO = [
 ];
 
 const SETTINGS_DEFAULT = {
+  businessName: "Дәм Әлемі",
+  businessTagline: "Доставка по Сортировке",
+  deliveryArea: "Сортировка и ближайшие кварталы",
+  workHours: "10:00–22:00",
+  heroTitle: "Вкус рядом. Закажите за 30 минут.",
+  heroSubtitle: "Сеты, шашлык, плов, манты, пицца, салаты и фирменный компот. Оплата Kaspi / Халык / наличные.",
   businessPhone: "+77470304096",
   freeFrom: 5000,
   deliveryFee: 500,
@@ -353,7 +359,9 @@ function CheckoutDrawer({ cart, settings, onClose }: { cart: ReturnType<typeof u
           </div>
         )}
 
-        <div className="mt-3 text-xs text-neutral-500">Нажимая «Отправить», вы соглашаетесь с условиями сервиса. Заказы принимаются только по Сортировке и ближайшим адресам.</div>
+        <div className="mt-3 text-xs text-neutral-500">
+          Нажимая «Отправить», вы соглашаетесь с условиями сервиса. Заказы принимаются только по зоне доставки: {settings.deliveryArea}.
+        </div>
       </div>
     </div>
   );
@@ -426,7 +434,7 @@ function AdminScreen({
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-2xl bg-neutral-900 text-white grid place-items-center text-lg font-bold">ADM</div>
           <div className="flex-1">
-            <h1 className="text-lg font-semibold">Админка — Дәм Әлемі</h1>
+            <h1 className="text-lg font-semibold">Админка — {sDraft.businessName || "Дәм Әлемі"}</h1>
             <p className="text-xs text-neutral-500">Доступ по секретному URL (?admin=PIN)</p>
           </div>
           <a href="/" className="px-3 py-2 rounded-2xl border">В магазин</a>
@@ -438,6 +446,18 @@ function AdminScreen({
         <section className="border rounded-2xl p-4 bg-white">
           <h2 className="font-semibold">Настройки</h2>
           <div className="mt-3 grid md:grid-cols-3 gap-3">
+            <label className="text-sm">Название бренда
+              <input value={sDraft.businessName} onChange={e => setSDraft({ ...sDraft, businessName: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
+            </label>
+            <label className="text-sm">Подпись под логотипом
+              <input value={sDraft.businessTagline} onChange={e => setSDraft({ ...sDraft, businessTagline: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
+            </label>
+            <label className="text-sm">Зона доставки
+              <input value={sDraft.deliveryArea} onChange={e => setSDraft({ ...sDraft, deliveryArea: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
+            </label>
+            <label className="text-sm">Часы работы
+              <input value={sDraft.workHours} onChange={e => setSDraft({ ...sDraft, workHours: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
+            </label>
             <label className="text-sm">Номер WhatsApp
               <input value={sDraft.businessPhone} onChange={e => setSDraft({ ...sDraft, businessPhone: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
             </label>
@@ -496,6 +516,19 @@ function AdminScreen({
               </label>
               <label className="text-sm md:col-span-3">Ссылка при клике (опционально)
                 <input value={sDraft.bannerLink} onChange={e => setSDraft({ ...sDraft, bannerLink: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" placeholder="https://..." />
+              </label>
+            </div>
+          </div>
+
+          {/* Hero */}
+          <div className="mt-4 border-t pt-4">
+            <h3 className="font-semibold mb-2">Главный экран</h3>
+            <div className="grid md:grid-cols-3 gap-3">
+              <label className="text-sm md:col-span-3">Заголовок
+                <input value={sDraft.heroTitle} onChange={e => setSDraft({ ...sDraft, heroTitle: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
+              </label>
+              <label className="text-sm md:col-span-3">Подзаголовок
+                <input value={sDraft.heroSubtitle} onChange={e => setSDraft({ ...sDraft, heroSubtitle: e.target.value })} className="mt-1 w-full rounded-xl border px-3 py-2" />
               </label>
             </div>
           </div>
@@ -598,8 +631,8 @@ function Storefront() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
           <Logo settings={settings} />
           <div className="flex-1">
-            <h1 className="text-lg font-semibold leading-tight">Дәм Әлемі — доставка по Сортировке</h1>
-            <p className="text-xs text-neutral-500">Работаем с 10:00 до 22:00 • Доставка: Сортировка и ближайшие кварталы</p>
+            <h1 className="text-lg font-semibold leading-tight">{settings.businessName} — {settings.businessTagline}</h1>
+            <p className="text-xs text-neutral-500">Работаем с {settings.workHours} • Доставка: {settings.deliveryArea}</p>
           </div>
           <button onClick={() => setCheckoutOpen(true)} className="rounded-2xl px-4 py-2 bg-rose-700 text-white font-medium shadow-md hover:shadow-lg transition">
             Корзина • {cart.count} / <Currency value={cart.total} />
@@ -610,8 +643,8 @@ function Storefront() {
       <section className="bg-gradient-to-br from-rose-50 to-amber-50 border-b">
         <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-4 items-center">
           <div className="flex-1">
-            <h2 className="text-2xl md:text-3xl font-bold">Вкус рядом. Закажите за 30 минут.</h2>
-            <p className="mt-2 text-neutral-600">Сеты, шашлык, плов, манты, пицца, салаты и фирменный компот. Оплата Kaspi / Халык / наличные.</p>
+            <h2 className="text-2xl md:text-3xl font-bold">{settings.heroTitle}</h2>
+            <p className="mt-2 text-neutral-600">{settings.heroSubtitle}</p>
             <div className="mt-4 flex gap-2">
               <input value={q} onChange={e => setQ(e.target.value)} placeholder="Поиск по меню…" className="w-full md:w-80 rounded-2xl border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500" />
             </div>
@@ -662,7 +695,7 @@ function Storefront() {
                 </div>
                 {(p.category === "fast" || /пицца/i.test(p.title)) && (
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {SETTINGS_DEFAULT.extras.sauces.map(s => (
+                    {settings.extras.sauces.map(s => (
                       <button key={s.id} onClick={() => cart.addExtra({ title: s.name, price: s.price, parentTitle: p.title })} className="text-xs px-3 py-1 rounded-full border">
                         + {s.name} (<Currency value={s.price} />)
                       </button>
@@ -677,7 +710,7 @@ function Storefront() {
 
       <footer className="border-t bg-white">
         <div className="max-w-6xl mx-auto px-4 py-6 text-sm text-neutral-600 flex flex-col md:flex-row gap-2 md:gap-6 items-start md:items-center">
-          <div>© {new Date().getFullYear()} Дәм Әлемі • Сортировка</div>
+          <div>© {new Date().getFullYear()} {settings.businessName} • {settings.deliveryArea}</div>
           <div>
             Тел.: <a href={`tel:${settings.businessPhone}`} className="underline">{settings.businessPhone}</a> • WhatsApp для заказов
           </div>
