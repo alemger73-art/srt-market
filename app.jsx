@@ -580,6 +580,21 @@ function Storefront() {
   const [cat, setCat] = useState<string>("hot");
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const cart = useCart();
+  const stats = [
+    { title: "Средняя скорость", value: "30–45 мин", desc: "доставка по району" },
+    { title: "Рейтинг сервиса", value: "4.9", desc: "по отзывам гостей" },
+    { title: "Свежих блюд", value: "200+", desc: "в меню ежедневно" }
+  ];
+  const features = [
+    { title: "Собственная кухня", desc: "готовим по заказу без заморозки и заготовок.", accent: "Отборные продукты" },
+    { title: "Контроль качества", desc: "двойная проверка состава и веса перед отправкой.", accent: "100% соответствие" },
+    { title: "Безопасная оплата", desc: "Kaspi, Халык или наличные курьеру.", accent: "Чек и поддержка" }
+  ];
+  const steps = [
+    { title: "Выберите блюда", desc: "категории, поиск и фильтры по вкусам." },
+    { title: "Добавьте детали", desc: "соусы, приборы и комментарии к заказу." },
+    { title: "Получите доставку", desc: "курьер приедет вовремя, а мы остаёмся на связи." }
+  ];
 
   const filtered = useMemo(
     () => products.filter(p => (cat ? p.category === cat : true) && p.title.toLowerCase().includes(q.toLowerCase())),
@@ -598,53 +613,124 @@ function Storefront() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
           <Logo settings={settings} />
           <div className="flex-1">
-            <h1 className="text-lg font-semibold leading-tight">Дәм Әлемі — доставка по Сортировке</h1>
-            <p className="text-xs text-neutral-500">Работаем с 10:00 до 22:00 • Доставка: Сортировка и ближайшие кварталы</p>
+            <h1 className="text-lg font-semibold leading-tight">Дәм Әлемі — супер‑сервис еды</h1>
+            <p className="text-xs text-neutral-500">Работаем с 10:00 до 22:00 • Сортировка и ближайшие кварталы</p>
           </div>
+          <nav className="hidden lg:flex items-center gap-4 text-sm text-neutral-600">
+            <a href="#menu" className="hover:text-neutral-900">Меню</a>
+            <a href="#advantages" className="hover:text-neutral-900">Преимущества</a>
+            <a href="#delivery" className="hover:text-neutral-900">Доставка</a>
+            <a href="#app" className="hover:text-neutral-900">Приложение</a>
+          </nav>
           <button onClick={() => setCheckoutOpen(true)} className="rounded-2xl px-4 py-2 bg-rose-700 text-white font-medium shadow-md hover:shadow-lg transition">
             Корзина • {cart.count} / <Currency value={cart.total} />
           </button>
         </div>
       </header>
 
-      <section className="bg-gradient-to-br from-rose-50 to-amber-50 border-b">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row gap-4 items-center">
-          <div className="flex-1">
-            <h2 className="text-2xl md:text-3xl font-bold">Вкус рядом. Закажите за 30 минут.</h2>
-            <p className="mt-2 text-neutral-600">Сеты, шашлык, плов, манты, пицца, салаты и фирменный компот. Оплата Kaspi / Халык / наличные.</p>
-            <div className="mt-4 flex gap-2">
-              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Поиск по меню…" className="w-full md:w-80 rounded-2xl border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+      <section className="bg-gradient-to-br from-rose-50 via-amber-50 to-white border-b">
+        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 grid md:grid-cols-[1.2fr_1fr] gap-6 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs text-neutral-600 border">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Мы онлайн и принимаем заказы
+            </div>
+            <h2 className="mt-4 text-3xl md:text-4xl font-bold leading-tight">
+              Ваше персональное food‑приложение: меню, доставка и контроль качества в одном месте.
+            </h2>
+            <p className="mt-3 text-neutral-600">
+              Сеты, шашлык, плов, манты, пицца и салаты — всё под вашим брендом. Оплата Kaspi, Халык или наличными.
+            </p>
+            <div className="mt-5 flex flex-col sm:flex-row gap-3">
+              <label className="flex-1">
+                <span className="sr-only">Поиск по меню</span>
+                <input
+                  value={q}
+                  onChange={e => setQ(e.target.value)}
+                  placeholder="Поиск по меню…"
+                  className="w-full rounded-2xl border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </label>
+              <a href="#menu" className="inline-flex items-center justify-center rounded-2xl px-5 py-3 bg-neutral-900 text-white font-medium hover:bg-neutral-800">
+                Смотреть меню
+              </a>
+            </div>
+            <div className="mt-6 grid sm:grid-cols-3 gap-3">
+              {stats.map(item => (
+                <div key={item.title} className="rounded-2xl border bg-white p-4">
+                  <div className="text-xl font-semibold">{item.value}</div>
+                  <div className="text-sm text-neutral-600">{item.title}</div>
+                  <div className="text-xs text-neutral-400 mt-1">{item.desc}</div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2 w-full md:w-80">
-            {products.slice(0, 6).map(p => (
-              <img key={p.id} src={p.img} alt={p.title} className="h-24 w-full object-cover rounded-xl" />
+          <div className="grid grid-cols-2 gap-3">
+            {products.slice(0, 4).map(p => (
+              <div key={p.id} className="rounded-2xl bg-white shadow-sm border overflow-hidden">
+                <img src={p.img} alt={p.title} className="h-36 w-full object-cover" />
+                <div className="p-3">
+                  <div className="text-sm font-semibold">{p.title}</div>
+                  <div className="text-xs text-neutral-500 mt-1">
+                    <Currency value={p.price} />
+                  </div>
+                </div>
+              </div>
             ))}
+            <div className="rounded-2xl border bg-neutral-900 text-white p-5 flex flex-col justify-between">
+              <div>
+                <div className="text-sm uppercase tracking-wide text-white/60">Персональное</div>
+                <div className="text-2xl font-semibold mt-2">Ваш бренд</div>
+                <div className="text-sm text-white/70 mt-2">Меню, баннеры и акции настраиваются в админке.</div>
+              </div>
+              <div className="text-xs text-white/60">Обновления за 1 минуту</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <nav className="max-w-6xl mx-auto px-4 py-3 overflow-auto">
-        <div className="flex gap-2 min-w-max">
-          {CATEGORIES.map(c => (
-            <button
-              key={c.id}
-              onClick={() => setCat(c.id)}
-              className={`px-4 py-2 rounded-2xl border transition whitespace-nowrap ${cat === c.id ? "bg-rose-700 text-white border-rose-700" : "bg-white hover:bg-neutral-100"}`}
-            >
-              {c.name}
-            </button>
-          ))}
-          <button
-            onClick={() => setCat("")}
-            className={`px-4 py-2 rounded-2xl border transition whitespace-nowrap ${cat === "" ? "bg-rose-700 text-white border-rose-700" : "bg-white hover:bg-neutral-100"}`}
-          >
-            Все
-          </button>
+      <section id="advantages" className="max-w-6xl mx-auto px-4 py-10">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h3 className="text-2xl font-semibold">Почему выбирают нас</h3>
+            <p className="text-neutral-600 mt-1">Сервис как у больших брендов — только под ваш бизнес.</p>
+          </div>
+          <a href="#delivery" className="text-sm text-rose-700 font-medium">Как устроена доставка →</a>
         </div>
-      </nav>
+        <div className="mt-6 grid md:grid-cols-3 gap-4">
+          {features.map(feature => (
+            <div key={feature.title} className="rounded-2xl border bg-white p-5 shadow-sm">
+              <div className="text-sm text-rose-600 font-medium">{feature.accent}</div>
+              <div className="text-lg font-semibold mt-2">{feature.title}</div>
+              <p className="text-sm text-neutral-600 mt-2">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <main className="max-w-6xl mx-auto px-4 pb-24">
+      <section id="menu" className="border-y bg-white/80">
+        <nav className="max-w-6xl mx-auto px-4 py-4 overflow-auto">
+          <div className="flex gap-2 min-w-max">
+            {CATEGORIES.map(c => (
+              <button
+                key={c.id}
+                onClick={() => setCat(c.id)}
+                className={`px-4 py-2 rounded-2xl border transition whitespace-nowrap ${cat === c.id ? "bg-rose-700 text-white border-rose-700" : "bg-white hover:bg-neutral-100"}`}
+              >
+                {c.name}
+              </button>
+            ))}
+            <button
+              onClick={() => setCat("")}
+              className={`px-4 py-2 rounded-2xl border transition whitespace-nowrap ${cat === "" ? "bg-rose-700 text-white border-rose-700" : "bg-white hover:bg-neutral-100"}`}
+            >
+              Все
+            </button>
+          </div>
+        </nav>
+      </section>
+
+      <main className="max-w-6xl mx-auto px-4 pb-16 pt-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map(p => (
             <article key={p.id} className="rounded-2xl bg-white border overflow-hidden shadow-sm hover:shadow-md transition">
@@ -674,6 +760,57 @@ function Storefront() {
           ))}
         </div>
       </main>
+
+      <section id="delivery" className="bg-gradient-to-br from-white via-neutral-50 to-rose-50 border-t">
+        <div className="max-w-6xl mx-auto px-4 py-12">
+          <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-semibold">Доставка, как в супер‑приложениях</h3>
+              <p className="text-neutral-600 mt-2">От выбора блюда до получения курьером — всё прозрачно и быстро.</p>
+            </div>
+            <div className="rounded-2xl border bg-white px-5 py-4 text-sm text-neutral-600">
+              Бесплатная доставка от <span className="font-semibold"><Currency value={settings.freeFrom} /></span>
+            </div>
+          </div>
+          <div className="mt-8 grid md:grid-cols-3 gap-4">
+            {steps.map((step, idx) => (
+              <div key={step.title} className="rounded-2xl border bg-white p-5 shadow-sm">
+                <div className="text-xs text-neutral-400">Шаг {idx + 1}</div>
+                <div className="text-lg font-semibold mt-2">{step.title}</div>
+                <p className="text-sm text-neutral-600 mt-2">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="app" className="max-w-6xl mx-auto px-4 py-12">
+        <div className="rounded-3xl bg-neutral-900 text-white p-8 md:p-10 grid md:grid-cols-[1.2fr_1fr] gap-6">
+          <div>
+            <div className="text-sm uppercase tracking-wide text-white/60">Мобильный сценарий</div>
+            <h3 className="text-3xl font-semibold mt-3">Свой мини‑маркет в телефоне клиента</h3>
+            <p className="text-white/70 mt-3">
+              Закрепите ссылку на главный экран, добавьте баннеры и персональные акции — всё управляется в админке.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button className="rounded-2xl bg-white text-neutral-900 px-5 py-3 font-medium">Скачать презентацию</button>
+              <a href={`tel:${settings.businessPhone}`} className="rounded-2xl border border-white/20 px-5 py-3 font-medium">Позвонить менеджеру</a>
+            </div>
+          </div>
+          <div className="grid gap-3">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-sm text-white/60">Команда поддержки</div>
+              <div className="text-xl font-semibold mt-2">Ответим за 2 минуты</div>
+              <div className="text-sm text-white/70 mt-2">WhatsApp и звонки: {settings.businessPhone}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="text-sm text-white/60">CRM и аналитика</div>
+              <div className="text-xl font-semibold mt-2">Рост повторных заказов</div>
+              <div className="text-sm text-white/70 mt-2">Промокоды, сеты дня и история заказов.</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <footer className="border-t bg-white">
         <div className="max-w-6xl mx-auto px-4 py-6 text-sm text-neutral-600 flex flex-col md:flex-row gap-2 md:gap-6 items-start md:items-center">
